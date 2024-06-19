@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hello-cronjob
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: hello-cronjob
+        spec:
+          containers:
+          - name: simple-now-hello
+            image: kanishkk3s.azurecr.io/hello/simple-now-hello:v1
+            env:
+            - name: FACTORY_NAME
+              value: "My Factory"
+            command:
+            - /bin/sh
+            - -c
+            - python -u hello.py --factoryName="$FACTORY_NAME"
+          imagePullSecrets:
+            - name: myacrsecret
+          restartPolicy: OnFailure
